@@ -55,21 +55,31 @@
 
 			});
 
+			var urlParams = new URLSearchParams(window.location.search);
+			var backgroundColor = urlParams.get('background');
+			var textColor = urlParams.get('textColor');
+			if (!backgroundColor) {
+				backgroundColor = '101010';
+			}
+			if (!textColor) {
+				textColor = '6699cc';
+			}
+
 
 			monaco.editor.defineTheme('net-theme-dark', {
 				base: 'vs-dark',
 				inherit: true,
 				colors: {
-					"editor.background": '#101010',
+					"editor.background": '#' + backgroundColor,
 				},
 				rules: [{
 						token: 'global',
-						foreground: '6699cc', // //FFFFFF
+						foreground: '6699cc',
 						fontStyle: "bold"
 					},
 					{
 						token: 'keyword',
-						foreground: 'cc99cc',
+						foreground: textColor,
 						fontStyle: "bold"
 					},
 					{
