@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <title></title>
     <style type="text/css">
+        @import url('https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400&display=swap');
         html,
         body {
             width: 100%;
@@ -11,11 +12,44 @@
             margin: 0;
             padding: 0;
             overflow: hidden;
+            font-family: 'Segoe UI', sans-serif;
         }
         .monaco-editor .cursor {
             transition: left 0.1s ease, top 0.1s ease;
             animation: cursor-blink-pulse 1.2s infinite;
         }
+
+        .notification-container {
+      position: fixed;
+      top: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 9999;
+    }
+
+    .notification {
+      background: rgba(48, 48, 48, 0.96);
+      color: #fff;
+      padding: 6px 14px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(6px);
+      transform: scale(0.95);
+      opacity: 0;
+    }
+
+    .notification svg {
+      width: 16px;
+      height: 16px;
+      fill: white;
+    }
 
         @keyframes cursor-blink-pulse {
             0%, 100% {
@@ -130,7 +164,7 @@
 </head>
 <body>
     <div id="container" style="width:100%;height:100%;"></div>
-    <img id="background-image" style="display: none;" />
+    <img id="background-image" style="display: block;" src="https://wallpapers.com/images/high/roblox-pictures-g9ouopdid48fz5ly.webp" />
     <div id="image-menu">
         <h3>Background Image Settings</h3>
         <label>
@@ -139,12 +173,13 @@
         </label>
         <label>
             Brightness:
-            <input type="range" id="brightness-slider" min="0" max="2" step="0.1" value="1">
-            <span id="brightness-value">1.0</span>
+            <input type="range" id="brightness-slider" min="0" max="2" step="0.1" value="0">
+            <span id="brightness-value">0.0</span>
         </label>
         <button id="remove-image">Remove Background</button>
         <button id="close-menu">Close</button>
     </div>
+    <div class="notification-container" id="notifContainer"></div>
     <script src="vs/loader.js"></script>
     <script type="text/javascript">
         require.config({
@@ -253,6 +288,49 @@
                 smoothScrolling: true,
             });
 
+  function createNotification(text = "тест") {
+    const container = document.getElementById("notifContainer");
+
+    const notif = document.createElement("div");
+    notif.className = "notification";
+    notif.innerHTML = `
+      <svg viewBox="0 0 24 24">
+        <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zm0 13c-3.31 0-6-2.69-6-6s2.69-6 6-6
+                 6 2.69 6 6-2.69 6-6 6zm0-10a4 4 0 100 8 4 4 0 000-8z"/>
+      </svg>
+      <span>${text}</span>
+    `;
+
+    container.appendChild(notif);
+
+    notif.animate([
+      { opacity: 0, transform: "scale(0.95)" },
+      { opacity: 1, transform: "scale(1)" }
+    ], {
+      duration: 400,
+      easing: "ease",
+      fill: "forwards"
+    });
+
+    // Анімація зникнення
+    setTimeout(() => {
+      const hide = notif.animate([
+        { opacity: 1, transform: "scale(1)" },
+        { opacity: 0, transform: "scale(0.95)" }
+      ], {
+        duration: 400,
+        easing: "ease",
+        fill: "forwards"
+      });
+
+      hide.onfinish = () => notif.remove();
+    }, 4000);
+  }
+
+  setTimeout(() => createNotification("Welcome to NeverFall! We wish you an enjoyable game"), 500);
+  setTimeout(() => createNotification("Press Fn + Insert to open the background settings menu"), 1500);
+  setTimeout(() => createNotification("All your settings and scripts are synchronized"), 2500);
+
             // Background image handling
             const backgroundImage = document.getElementById('background-image');
             const imageMenu = document.getElementById('image-menu');
@@ -262,30 +340,37 @@
             const closeMenuButton = document.getElementById('close-menu');
             const removeImageButton = document.getElementById('remove-image');
 
-            let isImageLoaded = false;
+            let isImageLoaded = true;
 
             // Load saved image and brightness from localStorage
             function loadFromLocalStorage() {
                 const savedImage = localStorage.getItem('backgroundImage');
                 const savedBrightness = localStorage.getItem('backgroundBrightness');
-                if (savedImage) {
+                if (savedImage && savedImage !== 'https://wallpapers.com/images/high/roblox-pictures-g9ouopdid48fz5ly.webp') {
                     backgroundImage.src = savedImage;
                     backgroundImage.style.display = 'block';
+                    backgroundImage.style.filter = `brightness(${savedBrightness || 1})`;
+                    brightnessSlider.value = savedBrightness || 1;
+                    brightnessValue.textContent = savedBrightness || '1.0';
                     isImageLoaded = true;
-                }
-                if (savedBrightness) {
-                    brightnessSlider.value = savedBrightness;
-                    brightnessValue.textContent = savedBrightness;
-                    backgroundImage.style.filter = `brightness(${savedBrightness})`;
+                } else {
+                    backgroundImage.src = 'https://wallpapers.com/images/high/roblox-pictures-g9ouopdid48fz5ly.webp';
+                    backgroundImage.style.display = 'block';
+                    backgroundImage.style.filter = 'brightness(0)';
+                    brightnessSlider.value = 0;
+                    brightnessValue.textContent = '0.0';
+                    isImageLoaded = true;
+                    localStorage.removeItem('backgroundImage');
+                    localStorage.removeItem('backgroundBrightness');
                 }
             }
 
             // Save image and brightness to localStorage
             function saveToLocalStorage() {
-                if (isImageLoaded) {
+                if (isImageLoaded && backgroundImage.src !== 'https://wallpapers.com/images/high/roblox-pictures-g9ouopdid48fz5ly.webp') {
                     localStorage.setItem('backgroundImage', backgroundImage.src);
                     localStorage.setItem('backgroundBrightness', brightnessSlider.value);
-                } else {
+                } else if (!isImageLoaded) {
                     localStorage.removeItem('backgroundImage');
                     localStorage.removeItem('backgroundBrightness');
                 }
@@ -334,10 +419,14 @@
             });
 
             removeImageButton.addEventListener('click', () => {
-                backgroundImage.src = '';
-                backgroundImage.style.display = 'none';
-                isImageLoaded = false;
-                saveToLocalStorage();
+                backgroundImage.src = 'https://wotpack.ru/wp-content/uploads/2024/09/https-sun9-7-userapi-com-impg-ry4l5hchlci_i6hc2b-768x432.jpeg';
+                backgroundImage.style.display = 'block';
+                backgroundImage.style.filter = 'brightness(0)';
+                brightnessSlider.value = 0;
+                brightnessValue.textContent = '0.0';
+                isImageLoaded = true;
+                localStorage.removeItem('backgroundImage');
+                localStorage.removeItem('backgroundBrightness');
                 scheduleReload();
             });
 
