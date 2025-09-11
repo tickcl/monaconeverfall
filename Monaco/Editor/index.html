@@ -258,6 +258,17 @@
     <div class="notification-container" id="notifContainer"></div>
     <script src="vs/loader.js"></script>
     <script type="text/javascript">
+        // Перевизначення localStorage
+Object.defineProperty(window, "localStorage", {
+    value: {
+        getItem: (k) => window.sessionStorage.getItem(k),
+        setItem: (k,v) => window.sessionStorage.setItem(k,v),
+        removeItem: (k) => window.sessionStorage.removeItem(k),
+        clear: () => window.sessionStorage.clear()
+    }
+});
+
+
         require.config({
             paths: {
                 'vs': 'vs'
