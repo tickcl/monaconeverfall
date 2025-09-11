@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
-    <title></title>
+    <title>NeverFall Editor</title>
     <style type="text/css">
         @import url('https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400&display=swap');
         html,
@@ -18,39 +18,35 @@
             transition: left 0.1s ease, top 0.1s ease;
             animation: cursor-blink-pulse 1.2s infinite;
         }
-
         .notification-container {
-      position: fixed;
-      top: 30px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      z-index: 9999;
-    }
-
-    .notification {
-      background: rgba(48, 48, 48, 0.96);
-      color: #fff;
-      padding: 6px 14px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 14px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-      backdrop-filter: blur(6px);
-      transform: scale(0.95);
-      opacity: 0;
-    }
-
-    .notification svg {
-      width: 16px;
-      height: 16px;
-      fill: white;
-    }
-
+            position: fixed;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 9999;
+        }
+        .notification {
+            background: rgba(48, 48, 48, 0.96);
+            color: #fff;
+            padding: 6px 14px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(6px);
+            transform: scale(0.95);
+            opacity: 0;
+        }
+        .notification svg {
+            width: 16px;
+            height: 16px;
+            fill: white;
+        }
         @keyframes cursor-blink-pulse {
             0%, 100% {
                 opacity: 1;
@@ -61,18 +57,15 @@
                 transform: scaleY(1.2);
             }
         }
-
         @keyframes shrinkText {
             from { transform: scaleX(1); opacity: 1; }
             to { transform: scaleX(0); opacity: 0; }
         }
-
         .monaco-editor .view-lines .view-line span.erasing {
             display: inline-block;
             animation: shrinkText 0.4s ease forwards;
             transform-origin: left center;
         }
-
         #background-image {
             position: absolute;
             top: 0;
@@ -82,7 +75,6 @@
             z-index: -1;
             object-fit: cover;
         }
-
         #image-menu {
             position: fixed;
             top: 50%;
@@ -100,13 +92,11 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
             min-width: 300px;
         }
-
         #image-menu.show {
             display: flex;
             flex-direction: column;
             gap: 15px;
         }
-
         #image-menu h3 {
             margin: 0 0 20px;
             font-size: 1.5em;
@@ -114,26 +104,22 @@
             color: #ffffff;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
-
         #image-menu label {
             display: flex;
             flex-direction: column;
             gap: 8px;
             font-size: 0.9em;
         }
-
         #image-menu input[type="file"] {
             background: rgba(255, 255, 255, 0.1);
             padding: 10px;
             border-radius: 6px;
             color: #ffffff;
         }
-
         #image-menu input[type="range"] {
             width: 100%;
             accent-color: #6699cc;
         }
-
         #image-menu button {
             background: linear-gradient(45deg, #6699cc, #557799);
             color: white;
@@ -144,26 +130,116 @@
             font-size: 1em;
             transition: transform 0.2s, background 0.3s;
         }
-
         #image-menu button:hover {
             background: linear-gradient(45deg, #557799, #446688);
         }
-
         #image-menu button:active {
             transform: translateY(0);
         }
-
         #image-menu #remove-image {
             background: linear-gradient(45deg, #cc6666, #994444);
         }
-
         #image-menu #remove-image:hover {
             background: linear-gradient(45deg, #994444, #773333);
+        }
+        /* Tab System Styles */
+        .tab-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background: rgba(40, 40, 40, 0.7);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .tab {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            margin: 0 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            color: #e0e0e0;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .tab:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .tab.active {
+            background: rgba(102, 153, 204, 0.3);
+            color: #ffffff;
+        }
+        .tab svg {
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+            fill: #e0e0e0;
+        }
+        .tab .close-btn {
+            margin-left: 8px;
+            background: none;
+            border: none;
+            color: #e0e0e0;
+            font-size: 14px;
+            cursor: pointer;
+            padding: 0 4px;
+        }
+        .tab .close-btn:hover {
+            color: #cc6666;
+        }
+        .add-tab-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #e0e0e0;
+            padding: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: background 0.2s;
+        }
+        .add-tab-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .add-tab-btn svg {
+            width: 16px;
+            height: 16px;
+            fill: #e0e0e0;
+        }
+        #container {
+            position: absolute;
+            top: 40px;
+            bottom: 0;
+            width: 100%;
         }
     </style>
 </head>
 <body>
-    <div id="container" style="width:100%;height:100%;"></div>
+    <div class="tab-container" id="tabContainer">
+        <div class="tab active" data-tab-id="tab1">
+            <svg viewBox="0 0 24 24">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+            </svg>
+            <span>Script.lua</span>
+            <button class="close-btn">×</button>
+        </div>
+        <button class="add-tab-btn" id="addTabBtn">
+            <svg viewBox="0 0 24 24">
+                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+            </svg>
+        </button>
+    </div>
+    <div id="container"></div>
     <img id="background-image" style="display: block;" src="https://wallpapers.com/images/high/roblox-pictures-g9ouopdid48fz5ly.webp" />
     <div id="image-menu">
         <h3>Background Image Settings</h3>
@@ -187,10 +263,8 @@
                 'vs': 'vs'
             }
         });
-
         var editor;
         var Proposals = [];
-
         var SetText;
         var ShowMinimap;
         var HideMinimap;
@@ -201,18 +275,15 @@
         var Refresh;
         var typingTimeout;
         var reloadTimeout;
-
         require(['vs/editor/editor.main'], function () {
             function getDependencyProposals() {
                 return Proposals;
             }
-
             monaco.languages.registerCompletionItemProvider('lua', {
                 provideCompletionItems: function (model, position) {
                     return getDependencyProposals();
                 },
             });
-
             var urlParams = new URLSearchParams(window.location.search);
             var backgroundColor = urlParams.get('background');
             var textColor = urlParams.get('textColor');
@@ -222,7 +293,6 @@
             if (!textColor) {
                 textColor = '6699cc';
             }
-
             monaco.editor.defineTheme('net-theme-dark', {
                 base: 'vs-dark',
                 inherit: true,
@@ -257,7 +327,6 @@
                     },
                 ]
             });
-
             function updateProposals(suggestion) {
                 Proposals = [{
                     label: suggestion,
@@ -267,7 +336,6 @@
                     sortText: "0"
                 }];
             }
-
             editor = monaco.editor.create(document.getElementById('container'), {
                 language: 'lua',
                 theme: "net-theme-dark",
@@ -287,50 +355,142 @@
                 showFoldingControls: "always",
                 smoothScrolling: true,
             });
+            // Tab System Logic
+            let tabs = [];
+            let activeTabId = 'tab1';
+            const tabContainer = document.getElementById('tabContainer');
+            const addTabBtn = document.getElementById('addTabBtn');
 
-  function createNotification(text = "тест") {
-    const container = document.getElementById("notifContainer");
+            function loadTabsFromLocalStorage() {
+                const savedTabs = localStorage.getItem('editorTabs');
+                if (savedTabs) {
+                    tabs = JSON.parse(savedTabs);
+                    if (!tabs.length) {
+                        tabs = [{ id: 'tab1', name: 'Script.lua', content: '' }];
+                    }
+                } else {
+                    tabs = [{ id: 'tab1', name: 'Script.lua', content: '' }];
+                }
+                renderTabs();
+                switchTab(activeTabId);
+            }
 
-    const notif = document.createElement("div");
-    notif.className = "notification";
-    notif.innerHTML = `
-      <svg viewBox="0 0 24 24">
-        <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zm0 13c-3.31 0-6-2.69-6-6s2.69-6 6-6
-                 6 2.69 6 6-2.69 6-6 6zm0-10a4 4 0 100 8 4 4 0 000-8z"/>
-      </svg>
-      <span>${text}</span>
-    `;
+            function saveTabsToLocalStorage() {
+                tabs = tabs.map(tab => ({
+                    ...tab,
+                    content: tab.id === activeTabId ? editor.getValue() : tab.content
+                }));
+                localStorage.setItem('editorTabs', JSON.stringify(tabs));
+            }
 
-    container.appendChild(notif);
+            function renderTabs() {
+                const tabsHtml = tabs.map(tab => `
+                    <div class="tab ${tab.id === activeTabId ? 'active' : ''}" data-tab-id="${tab.id}">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+                        </svg>
+                        <span>${tab.name}</span>
+                        <button class="close-btn">×</button>
+                    </div>
+                `).join('');
+                tabContainer.innerHTML = tabsHtml + `
+                    <button class="add-tab-btn" id="addTabBtn">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                        </svg>
+                    </button>
+                `;
+                addTabBtnListener();
+                addTabEventListeners();
+            }
 
-    notif.animate([
-      { opacity: 0, transform: "scale(0.95)" },
-      { opacity: 1, transform: "scale(1)" }
-    ], {
-      duration: 400,
-      easing: "ease",
-      fill: "forwards"
-    });
+            function addTab() {
+                const newTabId = `tab${Date.now()}`;
+                const newTabName = `Script${tabs.length + 1}.lua`;
+                tabs.push({ id: newTabId, name: newTabName, content: '' });
+                switchTab(newTabId);
+            }
 
-    // Анімація зникнення
-    setTimeout(() => {
-      const hide = notif.animate([
-        { opacity: 1, transform: "scale(1)" },
-        { opacity: 0, transform: "scale(0.95)" }
-      ], {
-        duration: 400,
-        easing: "ease",
-        fill: "forwards"
-      });
+            function switchTab(tabId) {
+                const currentContent = editor.getValue();
+                tabs = tabs.map(tab => ({
+                    ...tab,
+                    content: tab.id === activeTabId ? currentContent : tab.content
+                }));
+                activeTabId = tabId;
+                const activeTab = tabs.find(tab => tab.id === tabId);
+                editor.setValue(activeTab.content || '');
+                renderTabs();
+                saveTabsToLocalStorage();
+            }
 
-      hide.onfinish = () => notif.remove();
-    }, 4000);
-  }
+            function closeTab(tabId) {
+                if (tabs.length === 1) {
+                    createNotification("Cannot close the last tab");
+                    return;
+                }
+                const tabIndex = tabs.findIndex(tab => tab.id === tabId);
+                const tabName = tabs[tabIndex].name;
+                tabs = tabs.filter(tab => tab.id !== tabId);
+                if (activeTabId === tabId) {
+                    activeTabId = tabs[tabIndex - 1]?.id || tabs[0].id;
+                    switchTab(activeTabId);
+                } else {
+                    renderTabs();
+                }
+                saveTabsToLocalStorage();
+            }
 
-  setTimeout(() => createNotification("Welcome to NeverFall! We wish you an enjoyable game"), 500);
-  setTimeout(() => createNotification("Press Fn + Insert to open the background settings menu"), 1500);
-  setTimeout(() => createNotification("All your settings and scripts are synchronized"), 2500);
+            function addTabBtnListener() {
+                document.getElementById('addTabBtn').addEventListener('click', addTab);
+            }
 
+            function addTabEventListeners() {
+                document.querySelectorAll('.tab').forEach(tab => {
+                    tab.addEventListener('click', (e) => {
+                        if (!e.target.classList.contains('close-btn')) {
+                            switchTab(tab.dataset.tabId);
+                        }
+                    });
+                    const closeBtn = tab.querySelector('.close-btn');
+                    closeBtn.addEventListener('click', () => closeTab(tab.dataset.tabId));
+                });
+            }
+
+            function createNotification(text = "тест") {
+                const container = document.getElementById("notifContainer");
+                const notif = document.createElement("div");
+                notif.className = "notification";
+                notif.innerHTML = `
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zm0 13c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6zm0-10a4 4 0 100 8 4 4 0 000-8z"/>
+                    </svg>
+                    <span>${text}</span>
+                `;
+                container.appendChild(notif);
+                notif.animate([
+                    { opacity: 0, transform: "scale(0.95)" },
+                    { opacity: 1, transform: "scale(1)" }
+                ], {
+                    duration: 400,
+                    easing: "ease",
+                    fill: "forwards"
+                });
+                setTimeout(() => {
+                    const hide = notif.animate([
+                        { opacity: 1, transform: "scale(1)" },
+                        { opacity: 0, transform: "scale(0.95)" }
+                    ], {
+                        duration: 400,
+                        easing: "ease",
+                        fill: "forwards"
+                    });
+                    hide.onfinish = () => notif.remove();
+                }, 4000);
+            }
+            setTimeout(() => createNotification("Welcome to NeverFall! We wish you an enjoyable game"), 500);
+            setTimeout(() => createNotification("Press Fn + Insert to open the background settings menu"), 1500);
+            setTimeout(() => createNotification("All your settings and scripts are synchronized"), 2500);
             // Background image handling
             const backgroundImage = document.getElementById('background-image');
             const imageMenu = document.getElementById('image-menu');
@@ -339,10 +499,7 @@
             const brightnessValue = document.getElementById('brightness-value');
             const closeMenuButton = document.getElementById('close-menu');
             const removeImageButton = document.getElementById('remove-image');
-
             let isImageLoaded = true;
-
-            // Load saved image and brightness from localStorage
             function loadFromLocalStorage() {
                 const savedImage = localStorage.getItem('backgroundImage');
                 const savedBrightness = localStorage.getItem('backgroundBrightness');
@@ -364,8 +521,6 @@
                     localStorage.removeItem('backgroundBrightness');
                 }
             }
-
-            // Save image and brightness to localStorage
             function saveToLocalStorage() {
                 if (isImageLoaded && backgroundImage.src !== 'https://wallpapers.com/images/high/roblox-pictures-g9ouopdid48fz5ly.webp') {
                     localStorage.setItem('backgroundImage', backgroundImage.src);
@@ -375,26 +530,20 @@
                     localStorage.removeItem('backgroundBrightness');
                 }
             }
-
-            // Schedule page reload
             function scheduleReload() {
                 clearTimeout(reloadTimeout);
                 reloadTimeout = setTimeout(() => {
                     window.location.reload();
                 }, 3000);
             }
-
             function toggleImageMenu() {
                 const imageMenu = document.getElementById('image-menu');
                 const isShown = imageMenu.classList.contains('show');
-
                 imageMenu.classList.toggle('show');
-                
                 imageMenu.style.display = isShown ? 'none' : 'flex';
                 editor.getDomNode().style.opacity = isShown ? '1' : '0.8';
                 backgroundImage.style.display = isImageLoaded ? 'block' : 'none';
             }
-
             imageUpload.addEventListener('change', (event) => {
                 const file = event.target.files[0];
                 if (file) {
@@ -410,16 +559,14 @@
                     reader.readAsDataURL(file);
                 }
             });
-
             brightnessSlider.addEventListener('input', () => {
                 backgroundImage.style.filter = `brightness(${brightnessSlider.value})`;
                 brightnessValue.textContent = brightnessSlider.value;
                 saveToLocalStorage();
                 scheduleReload();
             });
-
             removeImageButton.addEventListener('click', () => {
-                backgroundImage.src = 'https://wotpack.ru/wp-content/uploads/2024/09/https-sun9-7-userapi-com-impg-ry4l5hchlci_i6hc2b-768x432.jpeg';
+                backgroundImage.src = 'https://wallpapers.com/images/high/roblox-pictures-g9ouopdid48fz5ly.webp';
                 backgroundImage.style.display = 'block';
                 backgroundImage.style.filter = 'brightness(0)';
                 brightnessSlider.value = 0;
@@ -429,23 +576,18 @@
                 localStorage.removeItem('backgroundBrightness');
                 scheduleReload();
             });
-
             closeMenuButton.addEventListener('click', () => {
                 toggleImageMenu();
                 scheduleReload();
             });
-
-            // Fn + Insert key handling
             editor.addCommand(monaco.KeyMod.Fn | monaco.KeyCode.Insert, () => {
                 toggleImageMenu();
             });
-
-            // Initialize image menu and load saved settings
             toggleImageMenu();
             const imagemenu = document.getElementById('image-menu');
             imagemenu.style.display = 'none';
             loadFromLocalStorage();
-
+            loadTabsFromLocalStorage();
             EnableAutoComplete = function () {
                 editor.updateOptions({
                     suggestOnTriggerCharacters: true,
@@ -453,7 +595,6 @@
                     wordBasedSuggestions: true
                 });
             }
-
             DisableAutoComplete = function () {
                 editor.updateOptions({
                     suggestOnTriggerCharacters: false,
@@ -461,13 +602,11 @@
                     wordBasedSuggestions: false
                 });
             }
-
             window.onresize = function () {
                 editor.layout();
                 backgroundImage.style.width = window.innerWidth + 'px';
                 backgroundImage.style.height = window.innerHeight + 'px';
             };
-
             ShowMinimap = function () {
                 editor.updateOptions({
                     minimap: {
@@ -475,7 +614,6 @@
                     }
                 });
             }
-
             HideMinimap = function () {
                 editor.updateOptions({
                     minimap: {
@@ -483,47 +621,37 @@
                     }
                 });
             }
-
             let savedProposals = [];
             let restoreTimeout;
-
             async function fetchAICompletion() {
                 const fullCode = GetText();
                 const position = editor.getPosition();
                 const query = `
 You are a Roblox Lua AI code assistant. Your only task is to generate valid Lua code that should be inserted at the specified cursor position.
-
 🎯 Objective:
 - Insert missing code **at the exact cursor position** based on the full context.
 - Your response must be **only** the code fragment that needs to be added. Nothing more.
-
 🚫 Do NOT:
 - Do not repeat any existing code.
 - Do not include full functions or blocks unless the user just started one.
 - Do not include quotes, triple backticks, formatting, or explanations.
 - Do not return complete lines unless absolutely necessary.
-
 ✅ Do:
 - Return the smallest valid Lua code needed to complete the line or expression.
 - Ensure your response is **syntactically correct** and logically fits the context.
 - In case of an empty function, print, or assignment, insert a realistic placeholder or expression.
-
 📌 Example 1:
 Code: print()
 Cursor: Line 1, Column 7
 → Response: "Hello, World!"
-
 📌 Example 2:
 Code: local function a()
 Cursor: Line 1, Column 21
 → Response: -- body
-
 Now complete the code based on the cursor position:
-
 ${fullCode}
 Cursor Line: ${position.lineNumber}, Column: ${position.column}
 `;
-
                 try {
                     const response = await fetch("https://api.mistral.ai/v1/chat/completions", {
                         method: "POST",
@@ -535,34 +663,27 @@ Cursor Line: ${position.lineNumber}, Column: ${position.column}
                             model: "mistral-small",
                             messages: [
                                 { role: "system", content: `You are a Roblox Lua AI code assistant. Your only task is to generate valid Lua code that should be inserted at the specified cursor position.
-
 🎯 Objective:
 - Insert missing code **at the exact cursor position** based on the full context.
 - Your response must be **only** the code fragment that needs to be added. Nothing more.
-
 🚫 Do NOT:
 - Do not repeat any existing code.
 - Do not include full functions or blocks unless the user just started one.
 - Do not include quotes, triple backticks, formatting, or explanations.
 - Do not return complete lines unless absolutely necessary.
-
 ✅ Do:
 - Return the smallest valid Lua code needed to complete the line or expression.
 - Ensure your response is **syntactically correct** and logically fits the context.
 - In case of an empty function, print, or assignment, insert a realistic placeholder or expression.
-
 📌 Example 1:
 Code: print()
 Cursor: Line 1, Column 7
 → Response: "Hello, World!"
-
 📌 Example 2:
 Code: local function a()
 Cursor: Line 1, Column 21
 → Response: -- body
-
 Now complete the code based on the cursor position:
-
 ${fullCode}
 Cursor Line: ${position.lineNumber}, Column: ${position.column}` },
                                 { role: "user", content: query }
@@ -572,10 +693,8 @@ Cursor Line: ${position.lineNumber}, Column: ${position.column}` },
                             max_tokens: 100
                         })
                     });
-
                     const data = await response.json();
                     const completionText = data.choices?.[0]?.message?.content?.trim();
-
                     if (completionText) {
                         savedProposals = Proposals.filter(item => item.detail !== "AI Suggestion");
                         Proposals = [];
@@ -586,25 +705,21 @@ Cursor Line: ${position.lineNumber}, Column: ${position.column}` },
                             Proposals = [...savedProposals];
                         }, 6000);
                     }
-
                 } catch (error) {
                     console.error('Mistral API error:', error);
                 }
             }
-
             editor.onDidChangeModelContent(function (e) {
                 window.clearTimeout(typingTimeout);
                 typingTimeout = setTimeout(fetchAICompletion, 6000);
+                saveTabsToLocalStorage();
             });
-
             GetText = function () {
                 return editor.getValue();
             }
-
             SetText = function (x) {
                 editor.setValue(x);
             }
-
             AddIntellisense = function (l, k, d, i) {
                 var t;
                 switch (k) {
@@ -666,7 +781,6 @@ Cursor Line: ${position.lineNumber}, Column: ${position.column}` },
                         t = monaco.languages.CompletionItemKind.Variable;
                         break;
                 }
-
                 Proposals.push({
                     label: l,
                     kind: t,
@@ -674,38 +788,28 @@ Cursor Line: ${position.lineNumber}, Column: ${position.column}` },
                     insertText: i
                 });
             }
-
             async function load() {
                 var docs = await (await fetch('https://raw.githubusercontent.com/iDevastate/Oxygen-v2/main/docs.txt')).json();
-
                 for (var prop in docs) {
                     for (var item in docs[prop]) {
                         const document = docs[prop][item];
                         AddIntellisense(document.label, document.type, document.description, document.insert);
                     }
                 }
-
                 for (const Key of ["_G", "_VERSION", "Enum", "game", "plugin", "shared", "script", "workspace", "DebuggerManager", "elapsedTime", "LoadLibrary", "PluginManager", "settings", "tick", "time", "typeof", "UserSettings"])
                     AddIntellisense(Key, "Keyword", Key, Key);
-
                 for (const Key of ["and", "break", "do", "else", "elseif", "end", "false", "for", "function", "if", "in", "local", "nil", "not", "or", "repeat", "return", "then", "true", "until", "while"])
                     AddIntellisense(Key, "Variable", Key, Key);
-
                 for (const Key of ["math.abs", "math.acos", "math.asin", "math.atan", "math.atan2", "math.ceil", "math.cos", "math.cosh", "math.deg", "math.exp", "math.floor", "math.fmod", "math.frexp", "math.huge", "math.ldexp", "math.log", "math.max", "math.min", "math.modf", "math.pi", "math.pow", "math.rad", "math.random", "math.randomseed", "math.sin", "math.sinh", "math.sqrt", "math.tan", "math.tanh", "table.concat", "table.foreach", "table.foreachi", "table.sort", "table.insert", "table.remove", "Color3.new", "Instance.new", "BrickColor.new", "Vector3.new", "Vector2.new", "debug.gethook", "debug.getinfo", "debug.getlocal", "debug.getmetatable", "debug.getregistry", "debug.getupvalue", "debug.getuservalue", "debug.sethook", "debug.setlocal", "debug.setmetatable", "debug.setupvalue", "debug.setuservalue", "debug.traceback", "debug.upvalueid", "debug.upvaluejoin", "string.byte", "string.char", "string.dump", "string.find", "string.format", "string.gmatch", "string.gsub", "string.len", "string.lower", "string.match", "string.rep", "string.reverse", "string.sub", "string.upper", "coroutine.create", "coroutine.resume", "coroutine.running", "coroutine.status", "coroutine.wrap", "coroutine.yield"])
                     AddIntellisense(Key, "Method", Key, Key);
-
                 for (const Key of ["Drawing", "debug", "Instance", "Color3", "Vector3", "Vector2", "BrickColor", "math", "table", "string", "coroutine", "Humanoid", "ClickDetector", "LocalScript", "Model", "ModuleScript", "Mouse", "Part", "Player", "Script", "Tool", "RunService", "UserInputService", "Workspace"])
                     AddIntellisense(Key, "Class", Key, Key);
-
                 for (const Key of ["print", "warn", "wait", "info", "printidentity", "assert", "collectgarbage", "error", "getfenv", "getmetatable", "setmetatable", "ipairs", "loadfile", "loadstring", "newproxy", "next", "pairs", "pcall", "spawn", "rawequal", "rawget", "rawset", "select", "tonumber", "tostring", "type", "unpack", "xpcall", "delay", "stats", ":Remove()", ":BreakJoints()", ":GetChildren()", ":FindFirstChild()", ":FireServer()", ":InvokeServer()", ":ClearAllChildren()", ":Clone()", ":Destroy()", ":FindFirstAncestor()", ":FindFirstAncestorOfClass()", ":FindFirstAncestorWhichIsA()", ":FindFirstChildOfClass()", ":FindFirstChildWhichIsA()", ":GetDebugId()", ":GetDescendants()", ":GetFullName()", ":IsA()", ":GetPropertyChangedSignal()", ":IsAncestorOf()", ":IsDescendantOf()", ":WaitForChild()", ":Connect()", ":AncestryChanged()", ":Changed()", ":ChildAdded()", ":ChildRemoved()", ":DescendantAdded()", ":DescendantRemoving()", ":GetService()", ":GetObjects()", ":HttpGet()", ":Wait()"])
                     AddIntellisense(Key, "Function", Key, Key.includes(":") ? Key.substring(1, Key.length) : Key);
-
                 for (const Key of ["Visible", "Color", "Transparency", "Thickness", "From", "To", "Text", "Size", "Center", "Outline", "OutlineColor", "Position", "TextBounds", "Font", "Data", "Rounding", "NumSides", "Radius", "Filled", "PointA", "PointB", "PointC", "PointD"])
                     AddIntellisense(Key, "Property", "Property for Drawing Library", Key);
             }
-
             load();
-
             Refresh = function () {
                 var text = GetText();
                 SetText('');
