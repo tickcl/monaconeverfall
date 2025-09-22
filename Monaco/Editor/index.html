@@ -142,14 +142,13 @@
         #image-menu #remove-image:hover {
             background: linear-gradient(45deg, #994444, #773333);
         }
-        /* Tab System Styles */
         .tab-container {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             height: 40px;
-            background: rgba(40, 40, 40, 0.7);
+            background: #0D0D0F;
             backdrop-filter: blur(10px);
             display: flex;
             align-items: center;
@@ -162,7 +161,7 @@
             align-items: center;
             padding: 8px 12px;
             margin: 0 4px;
-            background: rgba(255, 255, 255, 0.1);
+            background: #151515;
             border-radius: 6px;
             color: #e0e0e0;
             font-size: 14px;
@@ -177,9 +176,11 @@
             background: rgba(255, 255, 255, 0.2);
         }
         .tab.active {
-            background: rgba(102, 153, 204, 0.3);
-            color: #ffffff;
-        }
+    background: #0D0D0F;
+    color: #ffffff;
+    border: none;
+    box-shadow: inset 0 -1px 0 #1E1E20;
+}
         .tab svg {
             width: 16px;
             height: 16px;
@@ -258,7 +259,6 @@
     <div class="notification-container" id="notifContainer"></div>
     <script src="vs/loader.js"></script>
     <script type="text/javascript">
-        // Перевизначення localStorage
 Object.defineProperty(window, "localStorage", {
     value: {
         getItem: (k) => window.sessionStorage.getItem(k),
@@ -305,39 +305,29 @@ Object.defineProperty(window, "localStorage", {
                 textColor = '6699cc';
             }
             monaco.editor.defineTheme('net-theme-dark', {
-                base: 'vs-dark',
-                inherit: true,
-                colors: {
-                    "editor.background": '#' + backgroundColor,
-                },
-                rules: [{
-                        token: 'global',
-                        foreground: '6699cc',
-                        fontStyle: "bold"
-                    },
-                    {
-                        token: 'keyword',
-                        foreground: textColor,
-                        fontStyle: "bold"
-                    },
-                    {
-                        token: 'comment',
-                        foreground: '999999'
-                    },
-                    {
-                        token: 'number',
-                        foreground: 'f99157'
-                    },
-                    {
-                        token: 'string',
-                        foreground: '99CC99'
-                    },
-                    {
-                        token: 'Method',
-                        foreground: 'ffa1dc'
-                    },
-                ]
-            });
+    base: 'vs-dark',
+    inherit: true,
+    colors: {
+        "editor.background": "#0D0D0F", 
+        "editor.foreground": "#FFFFFF",
+        "editorLineNumber.foreground": "#5A5A5E",
+        "editor.selectionBackground": "#264F78",
+        "editor.inactiveSelectionBackground": "#3A3D41",
+    },
+    rules: [
+        { token: 'global', foreground: '66CCFF', fontStyle: 'bold' },  
+        { token: 'keyword', foreground: '569CD6', fontStyle: 'bold' }, 
+        { token: 'comment', foreground: '6A9955', fontStyle: 'italic' },
+        { token: 'number', foreground: 'B5CEA8' }, 
+        { token: 'string', foreground: 'CE9178' },  
+        { token: 'method', foreground: 'FFA1DC' }, 
+        { token: 'identifier', foreground: '9CDCFE' },
+        { token: 'operator', foreground: 'D4D4D4' },
+    ]
+});
+
+monaco.editor.setTheme('net-theme-dark');
+
             function updateProposals(suggestion) {
                 Proposals = [{
                     label: suggestion,
@@ -366,7 +356,6 @@ Object.defineProperty(window, "localStorage", {
                 showFoldingControls: "always",
                 smoothScrolling: true,
             });
-            // Tab System Logic
             let tabs = [];
             let activeTabId = 'tab1';
             const tabContainer = document.getElementById('tabContainer');
@@ -502,7 +491,6 @@ Object.defineProperty(window, "localStorage", {
             setTimeout(() => createNotification("Welcome to NeverFall! We wish you an enjoyable game"), 500);
             setTimeout(() => createNotification("Press Fn + Insert to open the background settings menu"), 1500);
             setTimeout(() => createNotification("All your settings and scripts are synchronized"), 2500);
-            // Background image handling
             const backgroundImage = document.getElementById('background-image');
             const imageMenu = document.getElementById('image-menu');
             const imageUpload = document.getElementById('image-upload');
