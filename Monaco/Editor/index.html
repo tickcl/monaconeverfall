@@ -7,16 +7,16 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
 
         html, body {
-            width: 100%;
-            height: 100%;
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            font-family: 'Inter', sans-serif;
-            background: transparent;
-            color: var(--text-primary);
-            position: relative;
-        }
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    font-family: 'Inter', sans-serif;
+    background: var(--background-darkest) !important;
+    color: var(--text-primary);
+    position: relative;
+}
 
         :root {
             --background-darkest: #0A0A0C;
@@ -214,15 +214,15 @@
         }
 
         #background-image {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            object-fit: cover;
-            display: block;
-        }
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    object-fit: cover;
+    display: none;
+}
 
         #image-menu {
             position: fixed;
@@ -374,28 +374,35 @@
             });
 
             monaco.editor.defineTheme('net-theme-dark', {
-                base: 'vs-dark',
-                inherit: true,
-                colors: {
-                    "editor.background": "#00000000",
-                    "editorLineNumber.foreground": "#5A5A5E",
-                    "editor.selectionBackground": "#3d5a8a66",
-                    "editor.inactiveSelectionBackground": "#3A3D4144",
-                    "scrollbarSlider.background": "#FFFFFF22",
-                    "scrollbarSlider.hoverBackground": "#FFFFFF33",
-                    "scrollbarSlider.activeBackground": "#FFFFFF44"
-                },
-                rules: [
-                    { token: 'global', foreground: '66CCFF', fontStyle: 'bold' },
-                    { token: 'keyword', foreground: '569CD6', fontStyle: 'bold' },
-                    { token: 'comment', foreground: '6A9955', fontStyle: 'italic' },
-                    { token: 'number', foreground: 'B5CEA8' },
-                    { token: 'string', foreground: 'CE9178' },
-                    { token: 'method', foreground: 'FFA1DC' },
-                    { token: 'identifier', foreground: '9CDCFE' },
-                    { token: 'operator', foreground: 'D4D4D4' },
-                ]
-            });
+    base: 'vs-dark',
+    inherit: true,
+    colors: {
+        "editor.background": "#00000000",
+        "editorLineNumber.foreground": "#5A5A5E",
+        "editor.selectionBackground": "#264F78AA",
+        "editor.inactiveSelectionBackground": "#3A3D4144",
+        "editor.lineHighlightBackground": "#2A2D2E55",
+        "editorCursor.foreground": "#FFFFFF",
+        "editor.foreground": "#CDD6F4", 
+        "scrollbarSlider.background": "#FFFFFF22",
+        "scrollbarSlider.hoverBackground": "#FFFFFF33",
+        "scrollbarSlider.activeBackground": "#FFFFFF44"
+    },
+    rules: [
+        { token: '', foreground: 'CDD6F4' },           
+        { token: 'keyword', foreground: 'C792EA', fontStyle: 'bold' }, 
+        { token: 'function', foreground: '82AAFF', fontStyle: 'bold' },
+        { token: 'identifier', foreground: 'CDD6F4' },     
+        { token: 'string', foreground: 'C3E88D' },          
+        { token: 'number', foreground: 'F78C6C' },       
+        { token: 'comment', foreground: '546E7A', fontStyle: 'italic' },
+        { token: 'operator', foreground: '89DDFF' },   
+        { token: 'predefined', foreground: 'FFCB6B' },       
+        { token: 'method', foreground: '82AAFF' },          
+        { token: 'property', foreground: 'F07178' }      
+    ]
+});
+
 
             monaco.editor.setTheme('net-theme-dark');
 
@@ -577,25 +584,23 @@
             let isImageLoaded = true;
 
             function loadFromLocalStorage() {
-                const savedImage = localStorage.getItem('backgroundImage');
-                const savedBrightness = localStorage.getItem('backgroundBrightness') || '1';
-                if (savedImage) {
-                    backgroundImage.src = savedImage;
-                    backgroundImage.style.filter = `brightness(${savedBrightness})`;
-                    brightnessSlider.value = savedBrightness;
-                    brightnessValue.textContent = savedBrightness;
-                    isImageLoaded = true;
-                } else {
-    backgroundImage.src = '';
-    backgroundImage.style.display = 'none';
-    backgroundImage.style.filter = 'brightness(0)';
-    brightnessSlider.value = 0;
-    brightnessValue.textContent = '0.0';
-    isImageLoaded = false;
-}
+    const savedImage = localStorage.getItem('backgroundImage');
+    const savedBrightness = localStorage.getItem('backgroundBrightness') || '1';
 
-                backgroundImage.style.display = 'block';
-            }
+    if (savedImage) {
+        backgroundImage.src = savedImage;
+        backgroundImage.style.display = 'block';
+        backgroundImage.style.filter = `brightness(${savedBrightness})`;
+        brightnessSlider.value = savedBrightness;
+        brightnessValue.textContent = savedBrightness;
+        isImageLoaded = true;
+    } else {
+        backgroundImage.src = '';
+        backgroundImage.style.display = 'none';
+        document.body.style.backgroundColor = "var(--background-darkest)";
+        isImageLoaded = false;
+    }
+}
 
             function saveToLocalStorage() {
                 if (isImageLoaded && backgroundImage.src !== 'https://wallpapers.com/images/high/roblox-pictures-g9ouopdid48fz5ly.webp') {
