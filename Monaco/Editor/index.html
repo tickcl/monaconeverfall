@@ -4,20 +4,183 @@
     <meta charset="utf-8" />
     <title>NeverFall Editor</title>
     <style type="text/css">
-        @import url('https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400&display=swap');
-        html,
-        body {
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+
+        html, body {
             width: 100%;
             height: 100%;
             margin: 0;
             padding: 0;
             overflow: hidden;
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Inter', sans-serif;
+            background: transparent;
+            color: var(--text-primary);
+            position: relative;
         }
+
+        :root {
+            --background-darkest: #0A0A0C;
+            --background-dark: #111115;
+            --background-primary: #18181D;
+            --background-secondary: #222228;
+            --border-color: #2A2A32;
+            --text-primary: #E3E3E8;
+            --text-secondary: #888899;
+            --accent-primary: #E53935;
+            --accent-secondary: #3EA6E0;
+            --font-family: 'Inter', sans-serif;
+        }
+
+.tab-container {
+    display: flex;
+    align-items: flex-end; 
+    background-color: var(--background-darkest);
+    padding: 0 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.tab {
+    padding: 8px 12px;
+    margin-right: 5px;
+    display: flex;
+    cursor: pointer;
+    align-items: center; 
+    border: 1px solid transparent;
+    border-bottom: none;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    transition: all 0.2s ease;
+    position: relative;
+    color: var(--text-secondary);
+}
+
+
+        .tab.active {
+            background-color: var(--background-dark);
+            color: var(--text-primary);
+            font-weight: 500;
+            border-color: var(--border-color);
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--background-dark);
+        }
+
+        .tab:not(.active):hover {
+            background-color: var(--background-primary);
+        }
+
+        .tab i.tab-icon {
+            color: var(--accent-secondary);
+            margin-right: 8px;
+            font-size: 15px;
+        }
+
+        .tab .tab-name {
+            padding-right: 15px;
+            font-family: var(--font-family);
+            font-size: 14px;
+        }
+
+        .tab .close-tab {
+            font-size: 14px;
+            color: var(--text-secondary);
+            transition: color 0.2s, background-color 0.2s;
+            border-radius: 50%;
+            padding: 2px;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tab .close-tab:hover {
+            background-color: #ffffff1a;
+            color: var(--text-primary);
+        }
+
+        .tab:not(.active) .close-tab {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .tab:hover .close-tab {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .add-tab-btn {
+            padding: 10px 12px;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-left: 5px;
+            margin-top: 1px;
+            align-self: flex-start;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .add-tab-btn:hover {
+            background-color: var(--background-secondary);
+            color: var(--text-primary);
+        }
+
+        .add-tab-btn i {
+            font-size: 14px;
+        }
+
+        #container {
+            position: absolute;
+            top: 42px;
+            bottom: 0;
+            width: 100%;
+            background: transparent;
+            z-index: 5;
+        }
+
+        .monaco-editor {
+            background: transparent !important;
+            color: var(--text-primary) !important;
+            font-family: 'SF Mono', 'Courier New', monospace !important;
+            font-size: 14px !important;
+        }
+
+        .monaco-editor .margin {
+            background: transparent !important;
+            color: var(--text-secondary) !important;
+            opacity: 0.6;
+        }
+
         .monaco-editor .cursor {
             transition: left 0.1s ease, top 0.1s ease;
             animation: cursor-blink-pulse 1.2s infinite;
         }
+
+        @keyframes cursor-blink-pulse {
+            0%, 100% { opacity: 1; transform: scaleY(1); }
+            50% { opacity: 0.6; transform: scaleY(1.2); }
+        }
+
+        .monaco-editor .token.keyword { color: #C586C0 !important; }
+        .monaco-editor .token.string { color: #CE9178 !important; }
+        .monaco-editor .token.number { color: #B5CEA8 !important; }
+        .monaco-editor .token.comment { color: #6A9955 !important; font-style: italic; }
+        .monaco-editor .token.identifier { color: #9CDCFE !important; }
+        .monaco-editor .token.operator { color: #D4D4D4 !important; }
+        .monaco-editor .token.predefined { color: #4FC1FF !important; }
+
         .notification-container {
             position: fixed;
             top: 30px;
@@ -28,6 +191,7 @@
             gap: 10px;
             z-index: 9999;
         }
+
         .notification {
             background: rgba(48, 48, 48, 0.96);
             color: #fff;
@@ -42,39 +206,24 @@
             transform: scale(0.95);
             opacity: 0;
         }
+
         .notification svg {
             width: 16px;
             height: 16px;
             fill: white;
         }
-        @keyframes cursor-blink-pulse {
-            0%, 100% {
-                opacity: 1;
-                transform: scaleY(1);
-            }
-            50% {
-                opacity: 0.6;
-                transform: scaleY(1.2);
-            }
-        }
-        @keyframes shrinkText {
-            from { transform: scaleX(1); opacity: 1; }
-            to { transform: scaleX(0); opacity: 0; }
-        }
-        .monaco-editor .view-lines .view-line span.erasing {
-            display: inline-block;
-            animation: shrinkText 0.4s ease forwards;
-            transform-origin: left center;
-        }
+
         #background-image {
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             z-index: -1;
             object-fit: cover;
+            display: block;
         }
+
         #image-menu {
             position: fixed;
             top: 50%;
@@ -86,17 +235,19 @@
             z-index: 1000;
             display: none;
             color: #e0e0e0;
-            font-family: 'Segoe UI', Arial, sans-serif;
+            font-family: 'Inter', sans-serif;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             min-width: 300px;
         }
+
         #image-menu.show {
             display: flex;
             flex-direction: column;
             gap: 15px;
         }
+
         #image-menu h3 {
             margin: 0 0 20px;
             font-size: 1.5em;
@@ -104,22 +255,26 @@
             color: #ffffff;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
+
         #image-menu label {
             display: flex;
             flex-direction: column;
             gap: 8px;
             font-size: 0.9em;
         }
+
         #image-menu input[type="file"] {
             background: rgba(255, 255, 255, 0.1);
             padding: 10px;
             border-radius: 6px;
             color: #ffffff;
         }
+
         #image-menu input[type="range"] {
             width: 100%;
             accent-color: #6699cc;
         }
+
         #image-menu button {
             background: linear-gradient(45deg, #6699cc, #557799);
             color: white;
@@ -130,131 +285,38 @@
             font-size: 1em;
             transition: transform 0.2s, background 0.3s;
         }
+
         #image-menu button:hover {
             background: linear-gradient(45deg, #557799, #446688);
         }
+
         #image-menu button:active {
             transform: translateY(0);
         }
+
         #image-menu #remove-image {
             background: linear-gradient(45deg, #cc6666, #994444);
         }
+
         #image-menu #remove-image:hover {
             background: linear-gradient(45deg, #994444, #773333);
         }
-        .tab-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 42px;
-    background: rgba(18, 18, 18, 0.6);
-    backdrop-filter: blur(14px) saturate(180%);
-    -webkit-backdrop-filter: blur(14px) saturate(180%);
-    display: flex;
-    align-items: center;
-    padding: 0 12px;
-    z-index: 100;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    box-shadow: 0 2px 6px rgba(0,0,0,0.25);
-}
-
-.tab {
-    display: flex;
-    align-items: center;
-    padding: 8px 14px;
-    margin: 0 5px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 10px;
-    color: #e5e5e5;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.25s ease;
-    max-width: 220px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    box-shadow: inset 0 0 0 0 rgba(255,255,255,0.2);
-}
-
-.tab:hover {
-    background: rgba(255, 255, 255, 0.08);
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05);
-}
-
-.tab.active {
-    background: rgba(255, 255, 255, 0.12);
-    color: #ffffff;
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08), 0 4px 8px rgba(0,0,0,0.3);
-}
-
-.tab svg {
-    width: 16px;
-    height: 16px;
-    margin-right: 8px;
-    fill: currentColor;
-}
-
-.tab .close-btn {
-    margin-left: 10px;
-    background: none;
-    border: none;
-    color: #bbbbbb;
-    font-size: 14px;
-    cursor: pointer;
-    padding: 0 4px;
-    transition: color 0.2s ease;
-}
-
-.tab .close-btn:hover {
-    color: #ff5f56;
-}
-        .add-tab-btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            color: #e0e0e0;
-            padding: 8px;
-            border-radius: 6px;
-            cursor: pointer;
-            margin-left: 10px;
-            transition: background 0.2s;
-        }
-        .add-tab-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-        .add-tab-btn svg {
-            width: 16px;
-            height: 16px;
-            fill: #e0e0e0;
-        }
-        #container {
-    position: absolute;
-    top: 40px;
-    bottom: 0;
-    width: 100%;
-    background: linear-gradient(to bottom, #2a2a2a, #0f0f0f); /* світліше зверху, темніше знизу */
-}
-
     </style>
 </head>
 <body>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <div class="tab-container" id="tabContainer">
         <div class="tab active" data-tab-id="tab1">
-            <svg viewBox="0 0 24 24">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
-            </svg>
-            <span>Script.lua</span>
-            <button class="close-btn">×</button>
+            <i class="fas fa-scroll tab-icon"></i>
+            <span class="tab-name">Script.lua</span>
+            <i class="fas fa-times close-tab"></i>
         </div>
-        <button class="add-tab-btn" id="addTabBtn">
-            <svg viewBox="0 0 24 24">
-                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
-            </svg>
+        <button class="add-tab-btn" id="addTabBtn" title="New Tab">
+            <i class="fas fa-plus"></i>
         </button>
     </div>
     <div id="container"></div>
-    <img id="background-image" style="display: block;" src="https://wallpapers.com/images/high/roblox-pictures-g9ouopdid48fz5ly.webp" />
+    <img id="background-image" src="https://wallpapers.com/images/high/roblox-pictures-g9ouopdid48fz5ly.webp" />
     <div id="image-menu">
         <h3>Background Image Settings</h3>
         <label>
@@ -263,8 +325,8 @@
         </label>
         <label>
             Brightness:
-            <input type="range" id="brightness-slider" min="0" max="2" step="0.1" value="0">
-            <span id="brightness-value">0.0</span>
+            <input type="range" id="brightness-slider" min="0" max="2" step="0.1" value="1">
+            <span id="brightness-value">1.0</span>
         </label>
         <button id="remove-image">Remove Background</button>
         <button id="close-menu">Close</button>
@@ -272,21 +334,21 @@
     <div class="notification-container" id="notifContainer"></div>
     <script src="vs/loader.js"></script>
     <script type="text/javascript">
-Object.defineProperty(window, "localStorage", {
-    value: {
-        getItem: (k) => window.sessionStorage.getItem(k),
-        setItem: (k,v) => window.sessionStorage.setItem(k,v),
-        removeItem: (k) => window.sessionStorage.removeItem(k),
-        clear: () => window.sessionStorage.clear()
-    }
-});
-
+        Object.defineProperty(window, "localStorage", {
+            value: {
+                getItem: (k) => window.sessionStorage.getItem(k),
+                setItem: (k, v) => window.sessionStorage.setItem(k, v),
+                removeItem: (k) => window.sessionStorage.removeItem(k),
+                clear: () => window.sessionStorage.clear()
+            }
+        });
 
         require.config({
             paths: {
                 'vs': 'vs'
             }
         });
+
         var editor;
         var Proposals = [];
         var SetText;
@@ -299,49 +361,43 @@ Object.defineProperty(window, "localStorage", {
         var Refresh;
         var typingTimeout;
         var reloadTimeout;
+
         require(['vs/editor/editor.main'], function () {
             function getDependencyProposals() {
                 return Proposals;
             }
+
             monaco.languages.registerCompletionItemProvider('lua', {
                 provideCompletionItems: function (model, position) {
                     return getDependencyProposals();
                 },
             });
-            var urlParams = new URLSearchParams(window.location.search);
-            var backgroundColor = urlParams.get('background');
-            var textColor = urlParams.get('textColor');
-            if (!backgroundColor) {
-                backgroundColor = '101010';
-            }
-            if (!textColor) {
-                textColor = '6699cc';
-            }
-            monaco.editor.defineTheme('net-theme-dark', {
-  base: 'vs-dark',
-  inherit: true,
-  colors: {
-    "editor.background": "#00000000",
-    "editorLineNumber.foreground": "#5A5A5E",
-    "editor.selectionBackground": "#3d5a8a66",
-    "editor.inactiveSelectionBackground": "#3A3D4144",
-    "scrollbarSlider.background": "#FFFFFF22",
-    "scrollbarSlider.hoverBackground": "#FFFFFF33",
-    "scrollbarSlider.activeBackground": "#FFFFFF44"
-  },
-  rules: [
-    { token: 'global', foreground: '66CCFF', fontStyle: 'bold' },
-    { token: 'keyword', foreground: '569CD6', fontStyle: 'bold' },
-    { token: 'comment', foreground: '6A9955', fontStyle: 'italic' },
-    { token: 'number', foreground: 'B5CEA8' },
-    { token: 'string', foreground: 'CE9178' },
-    { token: 'method', foreground: 'FFA1DC' },
-    { token: 'identifier', foreground: '9CDCFE' },
-    { token: 'operator', foreground: 'D4D4D4' },
-  ]
-});
-monaco.editor.setTheme('net-theme-dark');
 
+            monaco.editor.defineTheme('net-theme-dark', {
+                base: 'vs-dark',
+                inherit: true,
+                colors: {
+                    "editor.background": "#00000000",
+                    "editorLineNumber.foreground": "#5A5A5E",
+                    "editor.selectionBackground": "#3d5a8a66",
+                    "editor.inactiveSelectionBackground": "#3A3D4144",
+                    "scrollbarSlider.background": "#FFFFFF22",
+                    "scrollbarSlider.hoverBackground": "#FFFFFF33",
+                    "scrollbarSlider.activeBackground": "#FFFFFF44"
+                },
+                rules: [
+                    { token: 'global', foreground: '66CCFF', fontStyle: 'bold' },
+                    { token: 'keyword', foreground: '569CD6', fontStyle: 'bold' },
+                    { token: 'comment', foreground: '6A9955', fontStyle: 'italic' },
+                    { token: 'number', foreground: 'B5CEA8' },
+                    { token: 'string', foreground: 'CE9178' },
+                    { token: 'method', foreground: 'FFA1DC' },
+                    { token: 'identifier', foreground: '9CDCFE' },
+                    { token: 'operator', foreground: 'D4D4D4' },
+                ]
+            });
+
+            monaco.editor.setTheme('net-theme-dark');
 
             function updateProposals(suggestion) {
                 Proposals = [{
@@ -352,6 +408,7 @@ monaco.editor.setTheme('net-theme-dark');
                     sortText: "0"
                 }];
             }
+
             editor = monaco.editor.create(document.getElementById('container'), {
                 language: 'lua',
                 theme: "net-theme-dark",
@@ -371,6 +428,7 @@ monaco.editor.setTheme('net-theme-dark');
                 showFoldingControls: "always",
                 smoothScrolling: true,
             });
+
             let tabs = [];
             let activeTabId = 'tab1';
             const tabContainer = document.getElementById('tabContainer');
@@ -401,22 +459,35 @@ monaco.editor.setTheme('net-theme-dark');
             function renderTabs() {
                 const tabsHtml = tabs.map(tab => `
                     <div class="tab ${tab.id === activeTabId ? 'active' : ''}" data-tab-id="${tab.id}">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
-                        </svg>
-                        <span>${tab.name}</span>
-                        <button class="close-btn">×</button>
+                        <i class="fas fa-scroll tab-icon"></i>
+                        <span class="tab-name">${tab.name}</span>
+                        <i class="fas fa-times close-tab"></i>
                     </div>
                 `).join('');
                 tabContainer.innerHTML = tabsHtml + `
-                    <button class="add-tab-btn" id="addTabBtn">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
-                        </svg>
+                    <button class="add-tab-btn" id="addTabBtn" title="New Tab">
+                        <i class="fas fa-plus"></i>
                     </button>
                 `;
                 addTabBtnListener();
                 addTabEventListeners();
+            }
+
+            function addTabEventListeners() {
+                document.querySelectorAll('.tab').forEach(tab => {
+                    tab.addEventListener('click', (e) => {
+                        if (!e.target.classList.contains('close-tab')) {
+                            switchTab(tab.dataset.tabId);
+                        }
+                    });
+                    const closeBtn = tab.querySelector('.close-tab');
+                    if (closeBtn) {
+                        closeBtn.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            closeTab(tab.dataset.tabId);
+                        });
+                    }
+                });
             }
 
             function addTab() {
@@ -460,18 +531,6 @@ monaco.editor.setTheme('net-theme-dark');
                 document.getElementById('addTabBtn').addEventListener('click', addTab);
             }
 
-            function addTabEventListeners() {
-                document.querySelectorAll('.tab').forEach(tab => {
-                    tab.addEventListener('click', (e) => {
-                        if (!e.target.classList.contains('close-btn')) {
-                            switchTab(tab.dataset.tabId);
-                        }
-                    });
-                    const closeBtn = tab.querySelector('.close-btn');
-                    closeBtn.addEventListener('click', () => closeTab(tab.dataset.tabId));
-                });
-            }
-
             function createNotification(text = "тест") {
                 const container = document.getElementById("notifContainer");
                 const notif = document.createElement("div");
@@ -503,9 +562,11 @@ monaco.editor.setTheme('net-theme-dark');
                     hide.onfinish = () => notif.remove();
                 }, 4000);
             }
+
             setTimeout(() => createNotification("Welcome to NeverFall! We wish you an enjoyable game"), 500);
             setTimeout(() => createNotification("Press Fn + Insert to open the background settings menu"), 1500);
             setTimeout(() => createNotification("All your settings and scripts are synchronized"), 2500);
+
             const backgroundImage = document.getElementById('background-image');
             const imageMenu = document.getElementById('image-menu');
             const imageUpload = document.getElementById('image-upload');
@@ -514,27 +575,28 @@ monaco.editor.setTheme('net-theme-dark');
             const closeMenuButton = document.getElementById('close-menu');
             const removeImageButton = document.getElementById('remove-image');
             let isImageLoaded = true;
+
             function loadFromLocalStorage() {
                 const savedImage = localStorage.getItem('backgroundImage');
-                const savedBrightness = localStorage.getItem('backgroundBrightness');
-                if (savedImage && savedImage !== 'https://wallpapers.com/images/high/roblox-pictures-g9ouopdid48fz5ly.webp') {
+                const savedBrightness = localStorage.getItem('backgroundBrightness') || '1';
+                if (savedImage) {
                     backgroundImage.src = savedImage;
-                    backgroundImage.style.display = 'block';
-                    backgroundImage.style.filter = `brightness(${savedBrightness || 1})`;
-                    brightnessSlider.value = savedBrightness || 1;
-                    brightnessValue.textContent = savedBrightness || '1.0';
+                    backgroundImage.style.filter = `brightness(${savedBrightness})`;
+                    brightnessSlider.value = savedBrightness;
+                    brightnessValue.textContent = savedBrightness;
                     isImageLoaded = true;
                 } else {
-                    backgroundImage.src = 'https://wallpapers.com/images/high/roblox-pictures-g9ouopdid48fz5ly.webp';
-                    backgroundImage.style.display = 'block';
-                    backgroundImage.style.filter = 'brightness(0)';
-                    brightnessSlider.value = 0;
-                    brightnessValue.textContent = '0.0';
-                    isImageLoaded = true;
-                    localStorage.removeItem('backgroundImage');
-                    localStorage.removeItem('backgroundBrightness');
-                }
+    backgroundImage.src = '';
+    backgroundImage.style.display = 'none';
+    backgroundImage.style.filter = 'brightness(0)';
+    brightnessSlider.value = 0;
+    brightnessValue.textContent = '0.0';
+    isImageLoaded = false;
+}
+
+                backgroundImage.style.display = 'block';
             }
+
             function saveToLocalStorage() {
                 if (isImageLoaded && backgroundImage.src !== 'https://wallpapers.com/images/high/roblox-pictures-g9ouopdid48fz5ly.webp') {
                     localStorage.setItem('backgroundImage', backgroundImage.src);
@@ -544,20 +606,14 @@ monaco.editor.setTheme('net-theme-dark');
                     localStorage.removeItem('backgroundBrightness');
                 }
             }
-            function scheduleReload() {
-                clearTimeout(reloadTimeout);
-                reloadTimeout = setTimeout(() => {
-                    window.location.reload();
-                }, 3000);
-            }
+
             function toggleImageMenu() {
-                const imageMenu = document.getElementById('image-menu');
                 const isShown = imageMenu.classList.contains('show');
                 imageMenu.classList.toggle('show');
                 imageMenu.style.display = isShown ? 'none' : 'flex';
                 editor.getDomNode().style.opacity = isShown ? '1' : '0.8';
-                backgroundImage.style.display = isImageLoaded ? 'block' : 'none';
             }
+
             imageUpload.addEventListener('change', (event) => {
                 const file = event.target.files[0];
                 if (file) {
@@ -568,40 +624,45 @@ monaco.editor.setTheme('net-theme-dark');
                         backgroundImage.style.filter = `brightness(${brightnessSlider.value})`;
                         isImageLoaded = true;
                         saveToLocalStorage();
-                        scheduleReload();
                     };
                     reader.readAsDataURL(file);
                 }
             });
+
             brightnessSlider.addEventListener('input', () => {
                 backgroundImage.style.filter = `brightness(${brightnessSlider.value})`;
                 brightnessValue.textContent = brightnessSlider.value;
                 saveToLocalStorage();
-                scheduleReload();
             });
+
             removeImageButton.addEventListener('click', () => {
-                backgroundImage.src = 'https://wallpapers.com/images/high/roblox-pictures-g9ouopdid48fz5ly.webp';
-                backgroundImage.style.display = 'block';
-                backgroundImage.style.filter = 'brightness(0)';
-                brightnessSlider.value = 0;
-                brightnessValue.textContent = '0.0';
-                isImageLoaded = true;
-                localStorage.removeItem('backgroundImage');
-                localStorage.removeItem('backgroundBrightness');
-                scheduleReload();
-            });
+    backgroundImage.src = '';
+    backgroundImage.style.display = 'none';
+    backgroundImage.style.filter = 'brightness(0)';
+    brightnessSlider.value = 0;
+    brightnessValue.textContent = '0.0';
+    isImageLoaded = false;
+
+    document.body.style.backgroundColor = "var(--background-darkest)";
+    localStorage.removeItem('backgroundImage');
+    localStorage.removeItem('backgroundBrightness');
+    saveToLocalStorage();
+});
+
+
+
+
             closeMenuButton.addEventListener('click', () => {
                 toggleImageMenu();
-                scheduleReload();
             });
+
             editor.addCommand(monaco.KeyMod.Fn | monaco.KeyCode.Insert, () => {
                 toggleImageMenu();
             });
-            toggleImageMenu();
-            const imagemenu = document.getElementById('image-menu');
-            imagemenu.style.display = 'none';
+
             loadFromLocalStorage();
             loadTabsFromLocalStorage();
+
             EnableAutoComplete = function () {
                 editor.updateOptions({
                     suggestOnTriggerCharacters: true,
@@ -609,6 +670,7 @@ monaco.editor.setTheme('net-theme-dark');
                     wordBasedSuggestions: true
                 });
             }
+
             DisableAutoComplete = function () {
                 editor.updateOptions({
                     suggestOnTriggerCharacters: false,
@@ -616,11 +678,13 @@ monaco.editor.setTheme('net-theme-dark');
                     wordBasedSuggestions: false
                 });
             }
+
             window.onresize = function () {
                 editor.layout();
                 backgroundImage.style.width = window.innerWidth + 'px';
                 backgroundImage.style.height = window.innerHeight + 'px';
             };
+
             ShowMinimap = function () {
                 editor.updateOptions({
                     minimap: {
@@ -628,6 +692,7 @@ monaco.editor.setTheme('net-theme-dark');
                     }
                 });
             }
+
             HideMinimap = function () {
                 editor.updateOptions({
                     minimap: {
@@ -635,8 +700,10 @@ monaco.editor.setTheme('net-theme-dark');
                     }
                 });
             }
+
             let savedProposals = [];
             let restoreTimeout;
+
             async function fetchAICompletion() {
                 const fullCode = GetText();
                 const position = editor.getPosition();
@@ -676,30 +743,7 @@ Cursor Line: ${position.lineNumber}, Column: ${position.column}
                         body: JSON.stringify({
                             model: "mistral-small",
                             messages: [
-                                { role: "system", content: `You are a Roblox Lua AI code assistant. Your only task is to generate valid Lua code that should be inserted at the specified cursor position.
-🎯 Objective:
-- Insert missing code **at the exact cursor position** based on the full context.
-- Your response must be **only** the code fragment that needs to be added. Nothing more.
-🚫 Do NOT:
-- Do not repeat any existing code.
-- Do not include full functions or blocks unless the user just started one.
-- Do not include quotes, triple backticks, formatting, or explanations.
-- Do not return complete lines unless absolutely necessary.
-✅ Do:
-- Return the smallest valid Lua code needed to complete the line or expression.
-- Ensure your response is **syntactically correct** and logically fits the context.
-- In case of an empty function, print, or assignment, insert a realistic placeholder or expression.
-📌 Example 1:
-Code: print()
-Cursor: Line 1, Column 7
-→ Response: "Hello, World!"
-📌 Example 2:
-Code: local function a()
-Cursor: Line 1, Column 21
-→ Response: -- body
-Now complete the code based on the cursor position:
-${fullCode}
-Cursor Line: ${position.lineNumber}, Column: ${position.column}` },
+                                { role: "system", content: query },
                                 { role: "user", content: query }
                             ],
                             temperature: 0.4,
@@ -723,17 +767,21 @@ Cursor Line: ${position.lineNumber}, Column: ${position.column}` },
                     console.error('Mistral API error:', error);
                 }
             }
+
             editor.onDidChangeModelContent(function (e) {
                 window.clearTimeout(typingTimeout);
                 typingTimeout = setTimeout(fetchAICompletion, 6000);
                 saveTabsToLocalStorage();
             });
+
             GetText = function () {
                 return editor.getValue();
             }
+
             SetText = function (x) {
                 editor.setValue(x);
             }
+
             AddIntellisense = function (l, k, d, i) {
                 var t;
                 switch (k) {
@@ -802,6 +850,7 @@ Cursor Line: ${position.lineNumber}, Column: ${position.column}` },
                     insertText: i
                 });
             }
+
             async function load() {
                 var docs = await (await fetch('https://raw.githubusercontent.com/iDevastate/Oxygen-v2/main/docs.txt')).json();
                 for (var prop in docs) {
@@ -823,7 +872,9 @@ Cursor Line: ${position.lineNumber}, Column: ${position.column}` },
                 for (const Key of ["Visible", "Color", "Transparency", "Thickness", "From", "To", "Text", "Size", "Center", "Outline", "OutlineColor", "Position", "TextBounds", "Font", "Data", "Rounding", "NumSides", "Radius", "Filled", "PointA", "PointB", "PointC", "PointD"])
                     AddIntellisense(Key, "Property", "Property for Drawing Library", Key);
             }
+
             load();
+
             Refresh = function () {
                 var text = GetText();
                 SetText('');
