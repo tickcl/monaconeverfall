@@ -526,8 +526,8 @@
                 const tabName = tabs[tabIndex].name;
                 tabs = tabs.filter(tab => tab.id !== tabId);
                 if (activeTabId === tabId) {
-                    activeTabId = tabs[tabIndex - 1]?.id || tabs[0].id;
-                    switchTab(activeTabId);
+                    const newActiveTabId = tabs[tabIndex - 1]?.id || tabs[0].id;
+                    switchTab(newActiveTabId);
                 } else {
                     renderTabs();
                 }
